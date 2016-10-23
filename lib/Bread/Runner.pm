@@ -3,7 +3,7 @@ use 5.020;
 use strict;
 use warnings;
 
-# ABSTRACT: run all the apps via Bread::Board
+# ABSTRACT: run ALL the apps via Bread::Board
 
 our $VERSION = '0.900';
 
@@ -13,6 +13,10 @@ use Scalar::Util qw(blessed);
 use Getopt::Long;
 use Log::Any qw($log);
 use Try::Tiny;
+
+=method setup
+
+=cut
 
 sub setup {
     my ( $class, $bb_class, $opts ) = @_;
@@ -48,10 +52,10 @@ sub setup {
             # TODO maybe we can use MooseX::Getopt?
             push( @spec, $spec );
         }
-        my %opts;
+        my %commandline;
 
-        GetOptions( \%opts, @spec );
-        $service = $service_bb->get( \%opts );
+        GetOptions( \%commandline, @spec );
+        $service = $service_bb->get( \%commandline );
     }
     else {
         $service = $service_bb->get;
@@ -59,6 +63,30 @@ sub setup {
 
     return ($bb, $service);
 }
+
+=method compose_breadboard
+
+=cut
+
+sub compose_breadboard {
+    my ( $class, $bb_class, $opts ) = @_;
+
+    use_module($bb_class);
+    my $init_method = $opts->{init_method} || 'init';
+    if ( $bb_class->can($init_method) ) {
+        return $bb_class->$init_method($opts);
+    }
+    else {
+        my $msg =
+            "$bb_class does not implement a method $init_method (to compose the Bread::Board)";
+        $log->error($msg);
+        croak $msg;
+    }
+}
+
+=method run
+
+=cut
 
 sub run {
     my ( $class, $bb_class, $opts ) = @_;
@@ -102,22 +130,6 @@ sub run {
     return $rv;
 }
 
-sub compose_breadboard {
-    my ( $class, $bb_class, $opts ) = @_;
-
-    use_module($bb_class);
-    my $init_method = $opts->{init_method} || 'init';
-    if ( $bb_class->can($init_method) ) {
-        return $bb_class->$init_method($opts);
-    }
-    else {
-        my $msg =
-            "$bb_class does not implement a method $init_method (to compose the Bread::Board)";
-        $log->error($msg);
-        croak $msg;
-    }
-}
-
 sub _hook {
     my ( $class, $hook_name, $bb, $service, $opts ) = @_;
 
@@ -133,3 +145,24 @@ sub _hook {
 }
 
 1;
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=head2 OPTIONS
+
+=head3 service
+
+=head3 container
+
+=head3 init_method
+
+=head3 run_method
+
+=head3 pre_run
+
+=head3 post_run
+
+=head2 HOOKS
+
