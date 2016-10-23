@@ -1,0 +1,6 @@
+Revision history for Bread::Runner
+
+0.900   2016-10-23T17:37:00+0200
+    - added tests & documentation
+    - extracted from Validad::Tools
+
