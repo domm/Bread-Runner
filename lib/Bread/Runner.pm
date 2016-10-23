@@ -29,7 +29,13 @@ sub setup {
     my $bb = $class->compose_breadboard( $bb_class, $opts );
 
     my $bb_container = $opts->{container} || 'App';
-    my $service_bb = $bb->fetch( $bb_container . '/' . $service_name );
+    my $service_bb = try {
+        $bb->fetch( $bb_container . '/' . $service_name );
+    }
+    catch {
+        $log->error($_);
+        croak $_;
+    };
 
     my $service_class = $service_bb->class;
     use_module($service_class);
@@ -122,7 +128,7 @@ sub run {
         else {
             $msg = $e;
         }
-        $log->error( "%s died with %s", $method, $msg );
+        $log->errorf( "%s died with %s", $method, $msg );
         croak $msg;
     };
 

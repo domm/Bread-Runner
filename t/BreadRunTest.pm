@@ -20,6 +20,9 @@ my $c = container 'BreadRunTest' => as {
                 array => { isa => 'ArrayRef', optional => 1 },
             },
         );
+        service 'will_die' => (
+            class        => 'BreadRunTest::Die',
+        );
     };
     container 'Model' => as {
         service 'Foo' => (
