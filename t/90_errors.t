@@ -14,7 +14,9 @@ subtest 'dies during run' => sub {
         Bread::Runner->run( 'BreadRunTest', { service => 'will_die' } );
     }
     qr/hard/, 'died';
-    like( $log->msgs->[0]{message}, qr/run died with hard/, 'log message' );
+
+    is( $log->msgs->[0]{message}, 'Running BreadRunTest::Die->run', 'startup log message' );
+    like( $log->msgs->[1]{message}, qr/run died with hard/, 'log message' );
 };
 $log->clear;
 
