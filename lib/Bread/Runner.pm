@@ -5,7 +5,7 @@ use warnings;
 
 # ABSTRACT: run ALL the apps via Bread::Board
 
-our $VERSION = '0.900';
+our $VERSION = '0.901';
 
 use Carp;
 use Module::Runtime qw(use_module);
@@ -23,9 +23,7 @@ use Try::Tiny;
   });
 
 Initialize your Bread::Board, find the correct service, initialize the
-service, and then run it!`
-
-See
+service, and then run it!
 
 =cut
 
@@ -52,6 +50,7 @@ sub run {
     }
 
     my $rv = try {
+        $log->infof("Running %s->%s",ref($service), $method) unless $opts->{no_startup_logmessage};
         return $service->$method;
     }
     catch {
@@ -277,6 +276,10 @@ A subref to be called just after C<run> is called.
 Gets the same stuff like C<pre_run>.
 
 Could be used for cleanup etc.
+
+=head3 no_startup_logmessage
+
+Set this to a true value to prevent the startup log message.
 
 =head1 THANKS
 
