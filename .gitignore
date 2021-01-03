@@ -1,3 +1,4 @@
 Bread-Runner-*
 cpanfile.snapshot
 local
+.build/

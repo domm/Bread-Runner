@@ -5,8 +5,9 @@ use warnings;
 
 # ABSTRACT: run ALL the apps via Bread::Board
 
-our $VERSION = '0.903';
+# VERSION
 
+use Bread::Board qw();
 use Carp;
 use Module::Runtime qw(use_module);
 use Scalar::Util qw(blessed);
