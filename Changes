@@ -1,6 +1,9 @@
 Revision history for Bread::Runner
 
 {{$NEXT}}
+    - Minor pod tidy up. (Mohammad S Anwar)
+
+0.904     2021-01-03 16:50:23+01:00
     - dist housekeeping: github issues,
       Dist::Zilla::PluginBundle::Author::DOMM
 
